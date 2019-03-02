@@ -58,14 +58,9 @@ Customer Journey
 7. The contact is moved into a new phase of the Automation Plan and a new message sent requesting the user to send the word BUY via SMS
 8. The Automation Plan and customer dialogue continues until the Plan has been completed or no further communications are received and the user enrolment in the Plan expires.
 
-A conceptual diagram is included in the submission
-
-Provide documentation  about your module, how do the users use your module, where are things located, what do icons mean, are there any secret shortcuts etc.
-
-Please include screenshots where necessary. You can add images to the `./images` folder and then link to them from your documentation:
+A conceptual diagram is included in the submission:
 
 ![Architectural overview](./IntegrationArchitecture.png?raw=true "Architectural overview")
-
 
 ## Video
 
