@@ -19,7 +19,7 @@ namespace FlaminGalahs.Feature.FGSMS
         private void SetRoutes(HttpConfiguration config)
         {
             config.Routes.MapHttpRoute("TwilioListener", 
-                "FGapi/listener", new { action = "Get", controller = "TwilioListener" });
+                "FGapi/listener/{action}", new {  controller = "TwilioListener" });
             
         }
 
