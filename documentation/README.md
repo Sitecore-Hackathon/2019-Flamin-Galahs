@@ -58,12 +58,10 @@ Customer Journey
 7. The contact is moved into a new phase of the Automation Plan and a new message sent requesting the user to send the word BUY via SMS
 8. The Automation Plan and customer dialogue continues until the Plan has been completed or no further communications are received and the user enrolment in the Plan expires.
 
-A conceptual diagram is included in the submission:
+A technical overview diagram is included below:
 
 ![Architectural overview](./IntegrationArchitecture.png?raw=true "Architectural overview")
 
 ## Video
 
-Please provide a video highlighing your Hackathon module submission and provide a link to the video. Either a [direct link](https://www.youtube.com/watch?v=EpNhxW4pNKk) to the video, upload it to this documentation folder or maybe upload it to Youtube...
-
-[![Sitecore Hackathon Video Embedding Alt Text](https://img.youtube.com/vi/EpNhxW4pNKk/0.jpg)](https://www.youtube.com/watch?v=EpNhxW4pNKk)
+[![Submission video](https://img.youtube.com/vi/dnVynTshTiE/0.jpg)](https://www.youtube.com/watch?v=dnVynTshTiE)
