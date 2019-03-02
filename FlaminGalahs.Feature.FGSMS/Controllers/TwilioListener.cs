@@ -30,31 +30,36 @@ namespace FlaminGalahs.Feature.FGSMS
         }
 
         private async Task<bool> SendInteraction(SmsRequest incomingMessage)
-        {   
+        {
             //TODO: Move to config
-                string instanceUrl = "https://sc91.utcollection";
-                string channelId = "DC8E7268-BDBA-4545-A703-CCD0775A86BD";
-                string definitionId = "28A7C944-B8B6-45AD-A635-6F72E8F81F69";
-                var defaultInteraction = UTEntitiesBuilder.Interaction()
-                                                           .ChannelId(channelId)
-                                                           .Initiator(InteractionInitiator.Contact)
-                                                           .Contact("mobile", incomingMessage.From)
-                                                           .UserAgent("Twilio listener")
-                                                           .Build();
+                string instanceUrl = Sitecore.Configuration.Settings.GetSetting("FGSMS.UTInstanceURL");
+                string channelId = Sitecore.Configuration.Settings.GetSetting("FGSMS.UTChannelId"); ;
+                string definitionId = Sitecore.Configuration.Settings.GetSetting("FGSMS.UTEventDefinitionId");
+                string contactIdentifierName = Sitecore.Configuration.Settings.GetSetting("FGSMS.ContactIdentifierName");
+                string apiUserAgent = Sitecore.Configuration.Settings.GetSetting("FGSMS.APIUserAgent");
+                string customValueBodyKey = Sitecore.Configuration.Settings.GetSetting("FGSMS.CustomValueBodyKey");
+
+
+            var defaultInteraction = UTEntitiesBuilder.Interaction()
+                                            .ChannelId(channelId)
+                                            .Initiator(InteractionInitiator.Contact)
+                                            .Contact(contactIdentifierName, incomingMessage.From)
+                                            .UserAgent(apiUserAgent)
+                                            .Build();
 
                 using (var session = SitecoreUTSessionBuilder.SessionWithHost(instanceUrl)
-                                                        .DefaultInteraction(defaultInteraction)
-                                                        .BuildSession()
-                        )
-                {
-                    var goalRequest = UTRequestBuilder.GoalEvent(definitionId, DateTime.Now)
-                    .AddCustomValues(new Dictionary<string, string>{
-                        { "Body", incomingMessage.Body }}).Build();
+                                        .DefaultInteraction(defaultInteraction)
+                                        .BuildSession() )
+                    {
+                        var eventRequest = UTRequestBuilder.EventWithDefenitionId(definitionId)
+                        .Timestamp(DateTime.Now)
+                        .AddCustomValues(new Dictionary<string, string>{
+                            { customValueBodyKey, incomingMessage.Body }
+                        }).Build();
 
-                var eventResponse = await session.TrackGoalAsync(goalRequest);
-                    await session.CompleteCurrentInteractionAsync();
-                   
-                }
+                        var eventResponse = await session.TrackEventAsync(eventRequest);
+                        await session.CompleteCurrentInteractionAsync();
+                    }
                 return true;
 
         }
