@@ -1,11 +1,11 @@
- using System.Web;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.WebPages;
 using RazorGenerator.Mvc;
 
-[assembly: WebActivatorEx.PostApplicationStartMethod(typeof(FlaminGalahs.Project.FGWeb.RazorGeneratorMvcStart), "Start")]
+[assembly: WebActivatorEx.PostApplicationStartMethod(typeof(FlaminGalahs.Foundation.Mail.RazorGeneratorMvcStart), "Start")]
 
-namespace FlaminGalahs.Project.FGWeb {
+namespace FlaminGalahs.Foundation.Mail {
     public static class RazorGeneratorMvcStart {
         public static void Start() {
             var engine = new PrecompiledMvcEngine(typeof(RazorGeneratorMvcStart).Assembly) {
