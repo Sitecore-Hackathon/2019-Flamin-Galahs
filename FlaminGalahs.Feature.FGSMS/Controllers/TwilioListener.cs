@@ -32,12 +32,12 @@ namespace FlaminGalahs.Feature.FGSMS
         private async Task<bool> SendInteraction(SmsRequest incomingMessage)
         {
             //TODO: Move to config
-                string instanceUrl = Sitecore.Configuration.Settings.GetSetting("FGSMS.UTInstanceURL");
-                string channelId = Sitecore.Configuration.Settings.GetSetting("FGSMS.UTChannelId"); ;
-                string definitionId = Sitecore.Configuration.Settings.GetSetting("FGSMS.UTEventDefinitionId");
-                string contactIdentifierName = Sitecore.Configuration.Settings.GetSetting("FGSMS.ContactIdentifierName");
-                string apiUserAgent = Sitecore.Configuration.Settings.GetSetting("FGSMS.APIUserAgent");
-                string customValueBodyKey = Sitecore.Configuration.Settings.GetSetting("FGSMS.CustomValueBodyKey");
+            string instanceUrl = Sitecore.Configuration.Settings.GetSetting("FGSMS.UTInstanceURL");
+            string channelId = Sitecore.Configuration.Settings.GetSetting("FGSMS.UTChannelId"); ;
+            string definitionId = Sitecore.Configuration.Settings.GetSetting("FGSMS.UTEventDefinitionId");
+            string contactIdentifierName = Sitecore.Configuration.Settings.GetSetting("FGSMS.ContactIdentifierName");
+            string apiUserAgent = Sitecore.Configuration.Settings.GetSetting("FGSMS.APIUserAgent");
+            string customValueBodyKey = Sitecore.Configuration.Settings.GetSetting("FGSMS.CustomValueBodyKey");
 
 
             var defaultInteraction = UTEntitiesBuilder.Interaction()
@@ -47,20 +47,41 @@ namespace FlaminGalahs.Feature.FGSMS
                                             .UserAgent(apiUserAgent)
                                             .Build();
 
-                using (var session = SitecoreUTSessionBuilder.SessionWithHost(instanceUrl)
-                                        .DefaultInteraction(defaultInteraction)
-                                        .BuildSession() )
-                    {
-                        var eventRequest = UTRequestBuilder.EventWithDefenitionId(definitionId)
-                        .Timestamp(DateTime.Now)
-                        .AddCustomValues(new Dictionary<string, string>{
-                            { customValueBodyKey, incomingMessage.Body }
-                        }).Build();
+            using (var session = SitecoreUTSessionBuilder.SessionWithHost(instanceUrl)
+                                    .DefaultInteraction(defaultInteraction)
+                                    .BuildSession())
+            {
 
-                        var eventResponse = await session.TrackEventAsync(eventRequest);
-                        await session.CompleteCurrentInteractionAsync();
-                    }
-                return true;
+                var timestamp = DateTime.Now;
+                var eventRequest = UTRequestBuilder.EventWithDefenitionId(definitionId)
+                .Timestamp(timestamp)
+               .Build();
+
+                await session.TrackEventAsync(eventRequest);
+
+                if (incomingMessage.Body.ToUpper().StartsWith("QUOTE"))
+                {
+                    var goalRequest = UTRequestBuilder.GoalEvent("1640AD87-4087-4CBA-8A62-7D8062877E78", timestamp)
+                   
+                   .AddCustomValues(new Dictionary<string, string>{
+                                        { customValueBodyKey, incomingMessage.Body }
+                   }).Build();
+                    await session.TrackGoalAsync(goalRequest);
+                }
+                else if (incomingMessage.Body.ToUpper().StartsWith("BUY"))
+                {
+                    var goalRequest = UTRequestBuilder.GoalEvent("644AC72C-A006-4819-BE52-EE3ECA4FB54E", timestamp)
+                 
+                  .AddCustomValues(new Dictionary<string, string>{
+                                        { customValueBodyKey, incomingMessage.Body }
+                  }).Build();
+                    await session.TrackGoalAsync(goalRequest);
+
+                }
+
+                await session.CompleteCurrentInteractionAsync();
+            }
+            return true;
 
         }
     }
