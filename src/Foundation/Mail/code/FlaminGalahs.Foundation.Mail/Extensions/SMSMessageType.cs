@@ -30,7 +30,7 @@ namespace FlaminGalahs.Foundation.Mail.Extensions
 
         public new static bool IsCorrectMessageItem(Item item)
         {
-            return ItemUtilExt.IsTemplateDescendant(item, "{EE205EB1-616C-40C2-BF0B-EA907E94F15F}");
+            return ItemUtilExt.IsTemplateDescendant(item, Sitecore.Configuration.Settings.GetSetting("FlaminGalahs.Foundation.Mail.SmsMessageTemplateId"));
         }
 
         public static SMSMessageType FromItemEx(Item item, IMessageItemSourceFactory messageItemSourceFactory, IManagerRootService managerRootService)
