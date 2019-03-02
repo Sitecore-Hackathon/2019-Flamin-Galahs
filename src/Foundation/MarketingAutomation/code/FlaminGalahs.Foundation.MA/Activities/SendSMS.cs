@@ -14,9 +14,7 @@ namespace FlaminGalahs.Foundation.MA.Extensions
         public ISMSService SMSService { get; set; }
 
         public IActivityServices Services { get; set; }
-
-        // Custom service
-
+        
         public SendSMS(ISMSService smsService)
         {
             SMSService = smsService;
@@ -25,34 +23,18 @@ namespace FlaminGalahs.Foundation.MA.Extensions
         public ActivityResult Invoke(IContactProcessingContext context)
         {
             Condition.Requires(context.Contact).IsNotNull();
-            string preferredMail = String.Empty;
 
-            if (context.Contact.Emails() != null && !context.Contact.ConsentInformation().DoNotMarket)
+            if (context.Contact.PhoneNumbers() != null && !string.IsNullOrWhiteSpace(context.Contact.PhoneNumbers().PreferredPhoneNumber?.Number))
             {
-                preferredMail = context.Contact.Emails().PreferredEmail.SmtpAddress;
+                var phoneNumber = context.Contact.PhoneNumbers().PreferredPhoneNumber.Number; // Ignoring country code and extension for now
 
-                string message = "Quote reminder from Flamin Galahs";
+                var message = "Quote reminder from Flamin Galahs";
 
-                // Change e-mail subject depending on job title
-                if (context.Contact.Personal() != null)
-                {
-                    if (SMSService.IsJobInCategory(context.Contact.Personal().JobTitle, JobService.DeveloperCategory))
-                    {
-                        subject = "Geek out with us at Symposium!";
-                    }
-                    else if (JobService.IsJobInCategory(context.Contact.Personal().JobTitle, JobService.ExecutiveCategory))
-                    {
-                        subject = "Magnify your marketing with Sitecore Experience Cloud";
-                    }
-                }
-
-                SMSService.SendSMS("0421348380",message);
-
-                // Move to "true" path
+                SMSService.SendSMS(phoneNumber, message);
+                
                 return new SuccessMove("true");
             }
 
-            // Move to "false" path
             return new SuccessMove("false");
         }
     }
