@@ -861,7 +861,12 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Services\code\FlaminGalahs.Foundation.FGSMSServices\FlaminGalahs.Foundation.FGSMSServices.csproj">
+      <Project>{b5f2994f-eb8f-41a7-8d6d-16823b3c4df3}</Project>
+      <Name>FlaminGalahs.Foundation.FGSMSServices</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

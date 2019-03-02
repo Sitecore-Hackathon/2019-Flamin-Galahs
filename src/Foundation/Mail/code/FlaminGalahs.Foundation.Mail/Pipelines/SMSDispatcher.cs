@@ -1,4 +1,5 @@
-﻿using FlaminGalahs.Foundation.Mail.Extensions;
+﻿using FlaminGalahs.Foundation.FGSMS.Services;
+using FlaminGalahs.Foundation.Mail.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Sitecore.Configuration;
 using Sitecore.DependencyInjection;
@@ -11,6 +12,7 @@ using Sitecore.ExM.Framework.Diagnostics;
 using Sitecore.Modules.EmailCampaign;
 using Sitecore.Pipelines;
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading;
 
@@ -59,15 +61,15 @@ namespace FlaminGalahs.Foundation.Mail.Pipelines
             args.StartSendTime = DateTime.UtcNow;
 
             var from = message.Subject;
-            //var phoneNumber = sms.PersonalizationRecipient.GetProperties<Phone>()?.DefaultProperty?.PhoneNumber;
-            var phoneNumber = "0421348380";
+            var phoneNumber = sms.PersonalizationRecipient.Identifiers.FirstOrDefault(x => x.Source == "mobile").Identifier;
 
             var text = WebUtility.HtmlDecode(message.PlainTextBody);
 
             try
             {
-                //var service = ServiceLocator.ServiceProvider.GetRequiredService<ISmsService>();
-                //service.SendSMS(from, phoneNumber, text);
+                //TODO:  DI this.
+                var service = new SMSService();
+                service.SendSMS(phoneNumber, text);
                 //DO STUFF IN HERE TO SEND SMS
                 base.Process(args);
             }
